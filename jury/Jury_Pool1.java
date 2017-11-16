@@ -20,12 +20,12 @@ int[] juryPoolList;
 
 public Jury_Pool1(String s) {
 	JuryGraph candidateRelation = new JuryGraph(s);
-	
+
 	/*
 	 The string 's' represents the path to the input file. This part 
 	 has been implemented.
 	 */
-	
+
 	initialSize = candidateRelation.graph_Size;
 	juryPoolSize = calcPoolsize(candidateRelation);
 	juryPoolList = calcPoolList(candidateRelation);
@@ -36,10 +36,10 @@ int calcPoolsize(JuryGraph jG) {
 	ArrayList<Candidate> poolList = new ArrayList<>();
 	ArrayList<Candidate> rejectedPoolList = new ArrayList<>();
 
-	for (Candidate x : jG.candidate_List){
+	for (Candidate x : jG.candidate_List.subList(1, jG.candidate_List.size())){
 		if (!(rejectedPoolList.contains(x))){
 			poolList.add(x);
-			rejectedPoolList.addAll(bfsTree(x, jG));
+			rejectedPoolList.addAll(bfsTree(x));
 		}
 		poolSize = poolList.size();
 	}
@@ -52,28 +52,36 @@ int calcPoolsize(JuryGraph jG) {
 	You can write any other classes and methods 
 	to help you calculate. 
 	*/
-	
+
 	return poolSize;
 }
 
-ArrayList<Candidate> bfsTree(Candidate x, JuryGraph jG ) {
+ArrayList<Candidate> bfsTree(Candidate candidate) {
 	ArrayList<Candidate> tmp = new ArrayList<>();
 	ArrayList<Candidate> visited = new ArrayList<>();
 	ArrayList<Candidate> queue = new ArrayList<>();
 	Candidate s;
 
-	visited.add(x);
-	queue.add(x);
+	visited.add(candidate);
+	queue.add(candidate);
 	while (!(queue.size() == 0)) {
 		s = queue.remove(0);
 		for (Candidate m : s.adj_List) {
 			if (!(visited.contains(m))) {
 				visited.add(m);
-				queue.add(m);
+				for (Candidate a : s.adj_List){
+					if(!(queue.contains(a))){
+						queue.add(a);
+					}
+				}
+
 				tmp.add(m);
 			}
 		}
 
+	}
+	for(Candidate z : tmp){
+		System.out.println(z.id);
 	}
 	return tmp;
 }
@@ -89,10 +97,10 @@ int[] calcPoolList(JuryGraph jG) {
 	ArrayList<Candidate> pool = new ArrayList<>();
 	ArrayList<Candidate> rejectedPoolList = new ArrayList<>();
 
-	for (Candidate x : jG.candidate_List){
+	for (Candidate x : jG.candidate_List.subList(1, jG.candidate_List.size())){
 		if (!(rejectedPoolList.contains(x))){
 			pool.add(x);
-			rejectedPoolList.addAll(bfsTree(x, jG));
+			rejectedPoolList.addAll(bfsTree(x));
 		}
 	}
 
