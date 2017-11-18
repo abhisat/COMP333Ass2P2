@@ -80,9 +80,7 @@ ArrayList<Candidate> bfsTree(Candidate candidate) {
 		}
 
 	}
-	for(Candidate z : tmp){
-		System.out.println(z.id);
-	}
+
 	return tmp;
 }
 int[] calcPoolList(JuryGraph jG) {
